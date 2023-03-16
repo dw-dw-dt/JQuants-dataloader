@@ -1,14 +1,8 @@
-import requests
-import pandas as pd
-from utils import headers, FILE_PATH
+from utils import FILE_PATH, MyMail, MyPassword
+import jquantsapi
 
 
-r = requests.get("https://api.jpx-jquants.com/v1/fins/announcement", headers=headers)
+cli = jquantsapi.Client(mail_address=MyMail, password=MyPassword)
+df = cli.get_fins_announcement()
 
-columns_list = ['Code', 'Date', 'CompanyName', 'FiscalYear', 'SectorName', 'FiscalQuarter', 'Section']
-df = pd.DataFrame(columns=columns_list)
-
-for i, item in enumerate(r.json()['announcement']):
-    df.loc[i, :] = item
-
-df.to_csv(f'{FILE_PATH}/announcement_info/announcement.csv', index=False, encoding='utf-8-sig')
+df.to_csv(f'{FILE_PATH}/fin_announcement/fin_announcement.csv', index=False, encoding='utf-8-sig')
