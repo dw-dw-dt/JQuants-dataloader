@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "jquants-loader"
+version = "0.1.0"
+description = ""
+authors = ["Daiya Mita <18240230+dw-dw-dt@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "jquants_loader"}]
+
+[tool.poetry.dependencies]
+python = "3.11"
+pandas = "^1.5.3"
+requests = "^2.28.2"
+jquants-api-client = "^0.2.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
