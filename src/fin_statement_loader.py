@@ -4,7 +4,8 @@ import click
 
 
 @click.command()
-@click.argument('yyyymmdd','code')
+@click.argument('yyyymmdd')
+@click.argument('code')
 def main(yyyymmdd, code):
     cli = jquantsapi.Client(mail_address=MY_MAIL, password=MY_PASSWORD)
     df = cli.get_fins_statements(code=code)
