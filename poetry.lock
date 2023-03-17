@@ -692,6 +692,32 @@ MarkupSafe = ">=2.0"
 i18n = ["Babel (>=2.7)"]
 
 [[package]]
+name = "jpbizday"
+version = "0.0.3"
+description = "Pure-Python Japan Business Day Generator"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "jpbizday-0.0.3.tar.gz", hash = "sha256:66f3d77456d3550c17bca2c125a632cecbf41ade8971b47fbd7f35a722eb992c"},
+]
+
+[package.dependencies]
+jpholiday = "*"
+
+[[package]]
+name = "jpholiday"
+version = "0.1.8"
+description = "Pure-Python Japan Public Holiday Generate"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "jpholiday-0.1.8-py3-none-any.whl", hash = "sha256:5a2d5e680ea1cc43419882451c95d4c9ab9616127a02670fa03b98b597d88f9a"},
+    {file = "jpholiday-0.1.8.tar.gz", hash = "sha256:385b5877aa8a38bc0818a6eec42ad943b089e3d8969307b9ee27a443f2428438"},
+]
+
+[[package]]
 name = "jquants-api-client"
 version = "0.2.2"
 description = "J-Quants API Client Library"
@@ -2282,4 +2308,4 @@ test = ["mypy", "pre-commit", "pytest", "pytest-asyncio", "websockets (>=10.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11"
-content-hash = "b25363a0dc69e22c05785fa28c1946b3d3887278b5f90f57cb70398bc3d1b15a"
+content-hash = "0606d49459b31edf0398702061cf4e1ba9bf637993b78a76f57b6a0dd6d0713f"
