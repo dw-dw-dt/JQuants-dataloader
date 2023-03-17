@@ -59,8 +59,8 @@ if __name__ == "__main__":
             res = subprocess.run(['python', script, yyyymmdd])
     
     # 2017-01-04以降の価格データを一括取得. adjpriceの都合上、毎日全データを更新
-    script = 'src/prices_daily_quotes_loader.py'
-    with timer(script):
-        res = subprocess.run(['python', script, dt.datetime(2017,1,4).strftime('%Y%m%d'), yyyymmdd])
+    for script in ['src/prices_daily_quotes_loader.py']:
+        with timer(script):
+            res = subprocess.run(['python', script, dt.datetime(2017,1,4).strftime('%Y%m%d'), yyyymmdd])
 
     #load_financial_statement(yyyymmdd, overwrite=False)
