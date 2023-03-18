@@ -3,7 +3,7 @@ import os
 import datetime as dt
 import jpbizday
 import jquantsapi
-from src.utils import timer, create_dir, index_price_loader, trade_info_loader, prices_daily_quotes_loader, fin_announcement_loader, fin_statement_loader, MY_MAIL, MY_PASSWORD
+from src.utils import *
 
 
 if __name__ == "__main__":
@@ -46,7 +46,6 @@ if __name__ == "__main__":
         raise ValueError(f'{script} failed')
     
     # detaにアップロード
-    with timer('src/deta_uploader.py'):
-        result = subprocess.run(['python', 'src/deta_uploader.py'])
-    if result.returncode != 0:
-        raise ValueError('deta_uploader.py failed')
+    for func in [deta_upload]:
+        with timer(func.__name__):
+            func()
