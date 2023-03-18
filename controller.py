@@ -35,8 +35,7 @@ if __name__ == "__main__":
     cli = jquantsapi.Client(mail_address=MY_MAIL, password=MY_PASSWORD)
     cli.MAX_WORKERS = MAX_WORKERS
     for func in [trade_info_loader, prices_daily_quotes_loader, fin_announcement_loader, index_price_loader, fin_statement_loader]:
-        with timer(func.__name__):
-            func(cli)
+        with timer(func.__name__): func(cli)
     del cli
     
     script = 'src/historical_listed_info_loader.py'  # いい感じのAPIがなかったので自力実装. from_date = 2017-01-04がhard codingされているので注意.
@@ -47,5 +46,4 @@ if __name__ == "__main__":
     
     # detaにアップロード
     for func in [deta_upload]:
-        with timer(func.__name__):
-            func()
+        with timer(func.__name__): func()
