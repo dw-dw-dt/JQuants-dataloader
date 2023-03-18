@@ -5,18 +5,16 @@ from tqdm import tqdm
 import pandas as pd
 import datetime as dt
 import jpbizday
-from src.utils import FILE_PATH, create_dir, save_concated_listed_info
+from utils import FILE_PATH, save_concated_listed_info
 
 
 if __name__ == "__main__":
     """
     listed_infoのみrange指定のapiが無いため手動で取得します.
+    listed_info_loader.pyを何度も実行しています
     """
     from_date = dt.datetime(2017,1,4)
     to_date = dt.datetime.now() - dt.timedelta(days=1)
-
-    # ディレクトリ作成
-    create_dir()
 
     # script実行
     script = 'src/listed_info_loader.py'
@@ -36,4 +34,6 @@ if __name__ == "__main__":
 
         _r = subprocess.run(['python', script, yyyymmdd])
         time.sleep(1)
+    
+    # 統合ファイルの作成
     save_concated_listed_info()
