@@ -1,39 +1,29 @@
-import subprocess
-import time
-import pathlib
-from tqdm import tqdm
 import pandas as pd
 import datetime as dt
 import jpbizday
-from utils import FILE_PATH, save_concated_listed_info
+import jquantsapi
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from utils import FILE_PATH, MY_MAIL, MY_PASSWORD, MAX_WOEKERS
 
 
 if __name__ == "__main__":
     """
     listed_infoのみrange指定のapiが無いため手動で取得します.
-    listed_info_loader.pyを何度も実行しています
     """
+    cli = jquantsapi.Client(mail_address=MY_MAIL, password=MY_PASSWORD)
+
     from_date = dt.datetime(2017,1,4)
     to_date = dt.datetime.now() - dt.timedelta(days=1)
-
-    # script実行
-    script = 'src/listed_info_loader.py'
     dates = pd.date_range(start=from_date, end=to_date, freq='D')
-    existing_file_list = set([file.stem for file in pathlib.Path(f'{FILE_PATH}/listed_info/cache').iterdir()])
+    target_dates = [date.strftime('%Y%m%d') for date in dates 
+                    if jpbizday.is_bizday(date) and (date.month, date.day) != (12,31)]
 
-    for date in tqdm(dates):
-        yyyymmdd = date.strftime('%Y%m%d')
-        
-        if yyyymmdd in existing_file_list:
-            continue
-
-        if jpbizday.is_bizday(date) and (date.month, date.day) != (12,31):
-            pass
-        else:
-            continue
-
-        _r = subprocess.run(['python', script, yyyymmdd])
-        time.sleep(1)
+    buff = []
+    with ThreadPoolExecutor(max_workers=MAX_WOEKERS) as executor:
+        futures = [executor.submit(cli.get_listed_info, '', date) for date in target_dates]
+        for future in as_completed(futures):
+            buff.append(future.result())
     
-    # 統合ファイルの作成
-    save_concated_listed_info()
+    df = pd.concat(buff).sort_values(["Date", "Code"]).reset_index(drop=True)
+    df.tail(10000).to_csv(f'{FILE_PATH}/listed_info/listed_info_tail.csv', index=False, encoding='utf-8-sig')
+    df.to_pickle(f'{FILE_PATH}/listed_info/listed_info.pkl')

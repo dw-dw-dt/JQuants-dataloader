@@ -1,7 +1,8 @@
 import subprocess
 import datetime as dt
 import jpbizday
-from src.utils import timer, create_dir
+import jquantsapi
+from src.utils import timer, create_dir, index_price_loader, trade_info_loader, prices_daily_quotes_loader, fin_announcement_loader, fin_statement_loader, MY_MAIL, MY_PASSWORD
 
 
 if __name__ == "__main__":
@@ -9,38 +10,40 @@ if __name__ == "__main__":
     https://jpx.gitbook.io/j-quants-api/api-reference/data-spec API仕様書
     https://github.com/J-Quants/jquants-api-client-python APIクライアント仕様書
     当日の24:30ごろ更新されるデータもあるので、毎日深夜に実行して前日分のデータを取得するのがよさそう
-    * 銘柄情報（listed_info）:日次更新, 24:00
-    * 業種情報:不変
-    * 株価情報（prices_daily_quotes）:日次更新, 18:30
-    * 指数情報（index_price）:日次更新, 21:00
-    * 財務情報（fin_statement）:当日分の速報を18:30, 確定分を24:30
     * 投資部門別売買状況（trade_info）:毎週第4営業日, 18:00
-    * 決算発表予定（fin_announcement）:https://www.jpx.co.jp/listing/event-schedules/financial-announcement/index.html に更新があった場合のみ, 19:00
+    * 株価情報（prices_daily_quotes）:日次更新, 18:30
+    * 決算発表予定（fin_announcement）:更新があった場合のみ, 19:00
+    * 指数情報（index_price）:日次更新, 21:00
+    * 銘柄情報（listed_info）:日次更新, 24:00
+    * 財務情報（fin_statement）:当日分の速報を18:30, 確定分を24:30
     """
-    previous_date = dt.datetime.now() - dt.timedelta(days=1)
+    target_date = dt.datetime.now() - dt.timedelta(days=1)
 
     # 営業日でかつ12/31でないなら処理 （⇔ 土日、祝日、12/31,1/1～1/3はスキップ）
-    if jpbizday.is_bizday(previous_date) and (previous_date.month, previous_date.day) != (12,31):
+    if jpbizday.is_bizday(target_date) and (target_date.month, target_date.day) != (12,31):
         pass
     else:
+        print(f'{target_date} is not bizday. bye!')
         exit()
 
     # ディレクトリ作成
     create_dir()
 
     # APIからデータを取得
-    # historical_listed_info_loader 以外は全期間のデータを一括取得して,既存ファイルを上書きする
-    # historical_listed_info_loader は2017-01-04以降のデータを差分取得(既存ファイルを破壊しない)する
-    for script in ['src/trade_info_loader.py', 'src/index_price_loader.py', 
-                   'src/fin_announcement_loader.py', 'src/prices_daily_quotes_loader.py', 
-                   'src/fin_statement_loader.py', 'src/historical_listed_info_loader.py']: 
-        with timer(script):
-            result = subprocess.run(['python', script])
-        if result.returncode != 0:
-            raise ValueError(f'{script} failed')
+    cli = jquantsapi.Client(mail_address=MY_MAIL, password=MY_PASSWORD)
+    for func in [trade_info_loader, prices_daily_quotes_loader, fin_announcement_loader, index_price_loader, fin_statement_loader]:
+        with timer(func.__name__):
+            func(cli)
+    del cli
+    
+    script = 'src/historical_listed_info_loader.py'  # いい感じのAPIがなかったので自力実装. from_date = 2017-01-04がhard codingされているので注意.
+    with timer(script):
+        result = subprocess.run(['python', script])
+    if result.returncode != 0:
+        raise ValueError(f'{script} failed')
     
     # detaにアップロード
-    with timer('deta_uploader.py'):
-        result = subprocess.run(['python', 'deta_uploader.py'])
+    with timer('src/deta_uploader.py'):
+        result = subprocess.run(['python', 'src/deta_uploader.py'])
     if result.returncode != 0:
         raise ValueError('deta_uploader.py failed')

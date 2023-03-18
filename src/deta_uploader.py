@@ -1,5 +1,5 @@
 from deta import Deta
-from src.utils import FILE_PATH, DETA_KEY
+from utils import FILE_PATH, DETA_KEY
 
 
 if __name__ == '__main__':
