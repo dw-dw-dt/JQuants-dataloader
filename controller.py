@@ -1,4 +1,5 @@
 import subprocess
+import os
 import datetime as dt
 import jpbizday
 import jquantsapi
@@ -17,7 +18,7 @@ if __name__ == "__main__":
     * 銘柄情報（listed_info）:日次更新, 24:00
     * 財務情報（fin_statement）:当日分の速報を18:30, 確定分を24:30
     """
-    MAX_WORKERS = 20
+    MAX_WORKERS = int(os.cpu_count()*0.8)
     target_date = dt.datetime.now() - dt.timedelta(days=1)
 
     # 営業日でかつ12/31でないなら処理 （⇔ 土日、祝日、12/31,1/1～1/3はスキップ）
