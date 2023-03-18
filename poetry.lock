@@ -500,6 +500,18 @@ files = [
 ]
 
 [[package]]
+name = "deta"
+version = "1.1.0"
+description = "Python SDK for Deta Base & Deta Drive."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "deta-1.1.0-py3-none-any.whl", hash = "sha256:56c67ba284b955788cb82f5229529131d8e58af7fb91fc2208a3d0d55cda38f2"},
+    {file = "deta-1.1.0.tar.gz", hash = "sha256:c0d59a166139be8100179786ef7f0f5728be9e47deb669266e3045f0cb996828"},
+]
+
+[[package]]
 name = "executing"
 version = "1.2.0"
 description = "Get the currently executing AST node of a frame, and other information"
@@ -2308,4 +2320,4 @@ test = ["mypy", "pre-commit", "pytest", "pytest-asyncio", "websockets (>=10.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "3.11"
-content-hash = "0606d49459b31edf0398702061cf4e1ba9bf637993b78a76f57b6a0dd6d0713f"
+content-hash = "182521cace11e42534300c13a12a70e7717b00deeeca1500469c52dda1fd4794"

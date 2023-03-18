@@ -1,8 +1,7 @@
 import subprocess
-import pathlib
 import datetime as dt
 import jpbizday
-from src.utils import FILE_PATH, timer, create_dir
+from src.utils import timer, create_dir, save_concated_listed_info
 
 
 if __name__ == "__main__":
@@ -39,3 +38,5 @@ if __name__ == "__main__":
     for script in ['src/listed_info_loader.py']:
         with timer(script):
             _r = subprocess.run(['python', script, yyyymmdd])
+            save_concated_listed_info()
+

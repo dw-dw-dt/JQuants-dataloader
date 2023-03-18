@@ -5,7 +5,7 @@ from tqdm import tqdm
 import pandas as pd
 import datetime as dt
 import jpbizday
-from src.utils import FILE_PATH, create_dir
+from src.utils import FILE_PATH, create_dir, save_concated_listed_info
 
 
 if __name__ == "__main__":
@@ -21,20 +21,19 @@ if __name__ == "__main__":
     # script実行
     script = 'src/listed_info_loader.py'
     dates = pd.date_range(start=from_date, end=to_date, freq='D')
+    existing_file_list = set([file.stem for file in pathlib.Path(f'{FILE_PATH}/listed_info/cache').iterdir()])
 
     for date in tqdm(dates):
+        yyyymmdd = date.strftime('%Y%m%d')
+        
+        if yyyymmdd in existing_file_list:
+            continue
+
         if jpbizday.is_bizday(date) and (date.month, date.day) != (12,31):
             pass
         else:
             continue
 
-        yyyymmdd = date.strftime('%Y%m%d')
-        file = pathlib.Path(f'{FILE_PATH}/listed_info/{yyyymmdd}.csv')
-
-        if file.exists():
-            continue
-        else:
-            pass
-
         _r = subprocess.run(['python', script, yyyymmdd])
         time.sleep(1)
+    save_concated_listed_info()
