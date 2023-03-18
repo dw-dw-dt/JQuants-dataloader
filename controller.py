@@ -17,6 +17,7 @@ if __name__ == "__main__":
     * 銘柄情報（listed_info）:日次更新, 24:00
     * 財務情報（fin_statement）:当日分の速報を18:30, 確定分を24:30
     """
+    MAX_WORKERS = 20
     target_date = dt.datetime.now() - dt.timedelta(days=1)
 
     # 営業日でかつ12/31でないなら処理 （⇔ 土日、祝日、12/31,1/1～1/3はスキップ）
@@ -31,6 +32,7 @@ if __name__ == "__main__":
 
     # APIからデータを取得
     cli = jquantsapi.Client(mail_address=MY_MAIL, password=MY_PASSWORD)
+    cli.MAX_WORKERS = MAX_WORKERS
     for func in [trade_info_loader, prices_daily_quotes_loader, fin_announcement_loader, index_price_loader, fin_statement_loader]:
         with timer(func.__name__):
             func(cli)
@@ -38,7 +40,7 @@ if __name__ == "__main__":
     
     script = 'src/historical_listed_info_loader.py'  # いい感じのAPIがなかったので自力実装. from_date = 2017-01-04がhard codingされているので注意.
     with timer(script):
-        result = subprocess.run(['python', script])
+        result = subprocess.run(['python', script, str(MAX_WORKERS)])
     if result.returncode != 0:
         raise ValueError(f'{script} failed')
     

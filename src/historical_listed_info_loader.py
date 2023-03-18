@@ -2,11 +2,14 @@ import pandas as pd
 import datetime as dt
 import jpbizday
 import jquantsapi
+import click
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from utils import FILE_PATH, MY_MAIL, MY_PASSWORD, MAX_WOEKERS
+from utils import FILE_PATH, MY_MAIL, MY_PASSWORD
 
 
-if __name__ == "__main__":
+@click.command()
+@click.argument('max_workers', type=int, default=5)
+def main(max_workers):
     """
     listed_infoのみrange指定のapiが無いため手動で取得します.
     """
@@ -19,7 +22,7 @@ if __name__ == "__main__":
                     if jpbizday.is_bizday(date) and (date.month, date.day) != (12,31)]
 
     buff = []
-    with ThreadPoolExecutor(max_workers=MAX_WOEKERS) as executor:
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = [executor.submit(cli.get_listed_info, '', date) for date in target_dates]
         for future in as_completed(futures):
             buff.append(future.result())
@@ -27,3 +30,7 @@ if __name__ == "__main__":
     df = pd.concat(buff).sort_values(["Date", "Code"]).reset_index(drop=True)
     df.tail(10000).to_csv(f'{FILE_PATH}/listed_info/listed_info_tail.csv', index=False, encoding='utf-8-sig')
     df.to_pickle(f'{FILE_PATH}/listed_info/listed_info.pkl')
+
+
+if __name__ == "__main__":
+    main()

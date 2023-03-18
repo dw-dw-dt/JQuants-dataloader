@@ -5,11 +5,10 @@ import jquantsapi
 from contextlib import contextmanager
 
 
-MAX_WOEKERS = 5 # CLIに合わせて5にしています
 MY_MAIL = json.load(open('token.json', 'r'))['mail']
 MY_PASSWORD = json.load(open('token.json', 'r'))['password']
-FILE_PATH = '/mnt/d/JQuants-loader-files'
 DETA_KEY = json.load(open('token.json', 'r'))['deta']
+FILE_PATH = '/mnt/d/JQuants-loader-files'
 
 
 @contextmanager
