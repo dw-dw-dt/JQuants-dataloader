@@ -2,7 +2,7 @@ import subprocess
 import pathlib
 import datetime as dt
 import jpbizday
-from src.utils import FILE_PATH, timer
+from src.utils import FILE_PATH, timer, create_dir
 
 
 if __name__ == "__main__":
@@ -28,16 +28,14 @@ if __name__ == "__main__":
         exit()
 
     # ディレクトリ作成
-    for dir in ['listed_info', 'trade_info', 'index_price', 'fin_announcement', 'prices_daily_quotes', 'fin_statement/cache']:
-        p = pathlib.Path(f'{FILE_PATH}/{dir}')
-        p.mkdir(parents=True, exist_ok=True)
+    create_dir()
 
     # script実行
     for script in ['src/trade_info_loader.py', 'src/index_price_loader.py', 'src/fin_announcement_loader.py',
                    'src/prices_daily_quotes_loader.py', 'src/fin_statement_loader.py']:
         with timer(script):
-            res = subprocess.run(['python', script])
+            _r = subprocess.run(['python', script])
     
     for script in ['src/listed_info_loader.py']:
         with timer(script):
-            res = subprocess.run(['python', script, yyyymmdd])
+            _r = subprocess.run(['python', script, yyyymmdd])

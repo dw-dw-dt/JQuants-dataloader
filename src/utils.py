@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import pathlib
 from contextlib import contextmanager
 
 
@@ -18,3 +19,9 @@ def timer(name):
     print('[{}] start'.format(name))
     yield
     print('[{}] done in {} s'.format(name,time.time()-t0))
+
+
+def create_dir():
+    for dir in ['listed_info', 'trade_info', 'index_price', 'fin_announcement', 'prices_daily_quotes', 'fin_statement/cache']:
+        p = pathlib.Path(f'{FILE_PATH}/{dir}')
+        p.mkdir(parents=True, exist_ok=True)
