@@ -43,6 +43,6 @@ def load_concated_listed_info():
 
 def save_concated_listed_info():
     df = load_concated_listed_info().reset_index(drop=True)
-    df.tail(10000).to_csv(f'{FILE_PATH}/listed_info/listed_info.csv', index=False, encoding='utf-8-sig')
+    df.tail(10000).to_csv(f'{FILE_PATH}/listed_info/listed_info_tail.csv', index=False, encoding='utf-8-sig')
     df.to_pickle(f'{FILE_PATH}/listed_info/listed_info.pkl')
         
