@@ -41,8 +41,7 @@ if __name__ == "__main__":
     
     script = 'src/historical_listed_info_loader.py'  # いい感じのAPIがなかったので自力実装. from_date = 2017-01-04がhard codingされているので注意.
     with timer(script):
-        cmd = ['python', script, str(MAX_WORKERS)]
-        subprocess.run(cmd, check=True)
+        subprocess.run(['python', script, str(MAX_WORKERS)], check=True)
     
     # detaにアップロード
     for func in [deta_upload]:
