@@ -75,6 +75,7 @@ def fin_statement_loader(cli: jquantsapi.Client):
 def deta_upload():
     """
     https://deta.space/docs/en/reference/cli CLIドキュメント
+    並列アップロードはうまくいかなかったので、一つずつアップロードする。
     """
     deta = Deta(DETA_KEY)
     
