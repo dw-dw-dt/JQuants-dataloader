@@ -34,15 +34,15 @@ if __name__ == "__main__":
     # APIからデータを取得
     cli = jquantsapi.Client(mail_address=MY_MAIL, password=MY_PASSWORD)
     cli.MAX_WORKERS = MAX_WORKERS
-    for func in [trade_info_loader, prices_daily_quotes_loader, fin_announcement_loader, index_price_loader, fin_statement_loader]:
+    for func in [trade_info_loader, prices_daily_quotes_loader, fin_announcement_loader, 
+                 index_price_loader, fin_statement_loader]:
         with timer(func.__name__): func(cli)
     del cli
     
     script = 'src/historical_listed_info_loader.py'  # いい感じのAPIがなかったので自力実装. from_date = 2017-01-04がhard codingされているので注意.
     with timer(script):
-        result = subprocess.run(['python', script, str(MAX_WORKERS)])
-    if result.returncode != 0:
-        raise ValueError(f'{script} failed')
+        cmd = ['python', script, str(MAX_WORKERS)]
+        subprocess.run(cmd, check=True)
     
     # detaにアップロード
     for func in [deta_upload]:
