@@ -29,7 +29,7 @@ def create_dir():
 
 def save_df(df: pd.DataFrame, file_name: str):
     """
-    受け取ったデータフレームをcsvとpklで保存する。
+    受け取ったデータフレームをcsvとfeatherで保存する。
     """
     limit_row = 10000
     df = df.reset_index(drop=True)
