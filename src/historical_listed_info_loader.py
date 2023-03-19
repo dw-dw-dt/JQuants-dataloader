@@ -4,7 +4,7 @@ import jpbizday
 import jquantsapi
 import click
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from utils import FILE_PATH, MY_MAIL, MY_PASSWORD
+from utils import MY_MAIL, MY_PASSWORD, save_df
 
 
 @click.command()
@@ -28,8 +28,7 @@ def main(max_workers):
             buff.append(future.result())
     
     df = pd.concat(buff).sort_values(["Date", "Code"]).reset_index(drop=True)
-    df.tail(10000).to_csv(f'{FILE_PATH}/listed_info_tail.csv', index=False, encoding='utf-8-sig')
-    df.to_pickle(f'{FILE_PATH}/listed_info.pkl')
+    save_df(df, 'listed_info')
 
 
 if __name__ == "__main__":
