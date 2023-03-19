@@ -32,6 +32,7 @@ def index_price_loader(cli: jquantsapi.Client):
     """
     df = cli.get_indices_topix()
     df.to_csv(f'{FILE_PATH}/topix.csv', index=False, encoding='utf-8-sig')
+    df.to_pickle(f'{FILE_PATH}/topix.pkl')
 
 
 def trade_info_loader(cli: jquantsapi.Client):
@@ -42,6 +43,7 @@ def trade_info_loader(cli: jquantsapi.Client):
     """
     df = cli.get_markets_trades_spec()
     df.to_csv(f'{FILE_PATH}/trades_spec.csv', index=False, encoding='utf-8-sig')
+    df.to_pickle(f'{FILE_PATH}/trades_spec.pkl')
 
 
 def prices_daily_quotes_loader(cli: jquantsapi.Client):
@@ -61,6 +63,7 @@ def fin_announcement_loader(cli: jquantsapi.Client):
     """
     df = cli.get_fins_announcement()
     df.to_csv(f'{FILE_PATH}/fin_announcement.csv', index=False, encoding='utf-8-sig')
+    df.to_pickle(f'{FILE_PATH}/fin_announcement.pkl')
 
 
 def fin_statement_loader(cli: jquantsapi.Client):
@@ -69,6 +72,7 @@ def fin_statement_loader(cli: jquantsapi.Client):
     """
     df = cli.get_statements_range(cache_dir=f'{FILE_PATH}/cache').reset_index(drop=True)
     df.to_csv(f'{FILE_PATH}/fin_statement.csv', index=False, encoding='utf-8-sig')
+    df.to_pickle(f'{FILE_PATH}/fin_statement.pkl')
 
 
 def deta_upload():
@@ -80,9 +84,9 @@ def deta_upload():
     
     # Upload files. If exists, it will be overwritten.
     drive = deta.Drive('JQuants_files')
-    drive.put(name='trade_spec.csv', path = f'{FILE_PATH}/trades_spec.csv')
+    drive.put(name='trade_spec.pkl', path = f'{FILE_PATH}/trades_spec.pkl')
     drive.put(name='prices_daily_quotes.pkl', path = f'{FILE_PATH}/prices_daily_quotes.pkl')
-    drive.put(name='fin_announcement.csv', path = f'{FILE_PATH}/fin_announcement.csv')
-    drive.put(name='fin_statement.csv', path = f'{FILE_PATH}/fin_statement.csv')
-    drive.put(name='topix.csv', path = f'{FILE_PATH}/topix.csv')
+    drive.put(name='fin_announcement.pkl', path = f'{FILE_PATH}/fin_announcement.pkl')
+    drive.put(name='fin_statement.pkl', path = f'{FILE_PATH}/fin_statement.pkl')
+    drive.put(name='topix.pkl', path = f'{FILE_PATH}/topix.pkl')
     drive.put(name='listed_info.pkl', path = f'{FILE_PATH}/listed_info.pkl')
