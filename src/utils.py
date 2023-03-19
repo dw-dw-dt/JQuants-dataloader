@@ -21,9 +21,8 @@ def timer(name):
 
 
 def create_dir():
-    for dir in ['listed_info', 'trade_info', 'index_price', 'fin_announcement', 'prices_daily_quotes', 'fin_statement/cache']:
-        p = pathlib.Path(f'{FILE_PATH}/{dir}')
-        p.mkdir(parents=True, exist_ok=True)
+    p = pathlib.Path(f'{FILE_PATH}/cache')
+    p.mkdir(parents=True, exist_ok=True)
 
 
 def index_price_loader(cli: jquantsapi.Client):
@@ -32,7 +31,7 @@ def index_price_loader(cli: jquantsapi.Client):
     取得可能な指数データはTOPIX（東証株価指数）のみとなります。
     """
     df = cli.get_indices_topix()
-    df.to_csv(f'{FILE_PATH}/index_price/topix.csv', index=False, encoding='utf-8-sig')
+    df.to_csv(f'{FILE_PATH}/topix.csv', index=False, encoding='utf-8-sig')
 
 
 def trade_info_loader(cli: jquantsapi.Client):
@@ -42,7 +41,7 @@ def trade_info_loader(cli: jquantsapi.Client):
     https://www.jpx.co.jp/markets/statistics-equities/investor-type/index.html
     """
     df = cli.get_markets_trades_spec()
-    df.to_csv(f'{FILE_PATH}/trade_info/trades_spec.csv', index=False, encoding='utf-8-sig')
+    df.to_csv(f'{FILE_PATH}/trades_spec.csv', index=False, encoding='utf-8-sig')
 
 
 def prices_daily_quotes_loader(cli: jquantsapi.Client):
@@ -51,8 +50,8 @@ def prices_daily_quotes_loader(cli: jquantsapi.Client):
     株価は分割・併合を考慮した調整済み株価（小数点第２位四捨五入）と調整前の株価を取得することができます。
     """
     df = cli.get_price_range().reset_index(drop=True)
-    df.tail(10000).to_csv(f'{FILE_PATH}/prices_daily_quotes/prices_daily_quotes_tail.csv', index=False, encoding='utf-8-sig')
-    df.to_pickle(f'{FILE_PATH}/prices_daily_quotes/prices_daily_quotes.pkl')
+    df.tail(10000).to_csv(f'{FILE_PATH}/prices_daily_quotes_tail.csv', index=False, encoding='utf-8-sig')
+    df.to_pickle(f'{FILE_PATH}/prices_daily_quotes.pkl')
 
 
 def fin_announcement_loader(cli: jquantsapi.Client):
@@ -61,15 +60,15 @@ def fin_announcement_loader(cli: jquantsapi.Client):
     https://www.jpx.co.jp/listing/event-schedules/financial-announcement/index.html
     """
     df = cli.get_fins_announcement()
-    df.to_csv(f'{FILE_PATH}/fin_announcement/fin_announcement.csv', index=False, encoding='utf-8-sig')
+    df.to_csv(f'{FILE_PATH}/fin_announcement.csv', index=False, encoding='utf-8-sig')
 
 
 def fin_statement_loader(cli: jquantsapi.Client):
     """
     2017年1月以降のデータをもとに作成されております。
     """
-    df = cli.get_statements_range(cache_dir=f'{FILE_PATH}/fin_statement/cache').reset_index(drop=True)
-    df.to_csv(f'{FILE_PATH}/fin_statement/fin_statement.csv', index=False, encoding='utf-8-sig')
+    df = cli.get_statements_range(cache_dir=f'{FILE_PATH}/cache').reset_index(drop=True)
+    df.to_csv(f'{FILE_PATH}/fin_statement.csv', index=False, encoding='utf-8-sig')
 
 
 def deta_upload():
@@ -81,9 +80,9 @@ def deta_upload():
     
     # Upload files. If exists, it will be overwritten.
     drive = deta.Drive('JQuants_files')
-    drive.put(name='trade_spec.csv', path = f'{FILE_PATH}/trade_info/trades_spec.csv')
-    drive.put(name='prices_daily_quotes.pkl', path = f'{FILE_PATH}/prices_daily_quotes/prices_daily_quotes.pkl')
-    drive.put(name='fin_announcement.csv', path = f'{FILE_PATH}/fin_announcement/fin_announcement.csv')
-    drive.put(name='fin_statement.csv', path = f'{FILE_PATH}/fin_statement/fin_statement.csv')
-    drive.put(name='topix.csv', path = f'{FILE_PATH}/index_price/topix.csv')
-    drive.put(name='listed_info.pkl', path = f'{FILE_PATH}/listed_info/listed_info.pkl')
+    drive.put(name='trade_spec.csv', path = f'{FILE_PATH}/trades_spec.csv')
+    drive.put(name='prices_daily_quotes.pkl', path = f'{FILE_PATH}/prices_daily_quotes.pkl')
+    drive.put(name='fin_announcement.csv', path = f'{FILE_PATH}/fin_announcement.csv')
+    drive.put(name='fin_statement.csv', path = f'{FILE_PATH}/fin_statement.csv')
+    drive.put(name='topix.csv', path = f'{FILE_PATH}/topix.csv')
+    drive.put(name='listed_info.pkl', path = f'{FILE_PATH}/listed_info.pkl')

@@ -28,8 +28,8 @@ def main(max_workers):
             buff.append(future.result())
     
     df = pd.concat(buff).sort_values(["Date", "Code"]).reset_index(drop=True)
-    df.tail(10000).to_csv(f'{FILE_PATH}/listed_info/listed_info_tail.csv', index=False, encoding='utf-8-sig')
-    df.to_pickle(f'{FILE_PATH}/listed_info/listed_info.pkl')
+    df.tail(10000).to_csv(f'{FILE_PATH}/listed_info_tail.csv', index=False, encoding='utf-8-sig')
+    df.to_pickle(f'{FILE_PATH}/listed_info.pkl')
 
 
 if __name__ == "__main__":
