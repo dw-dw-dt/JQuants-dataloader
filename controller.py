@@ -34,8 +34,8 @@ if __name__ == "__main__":
     # APIからデータを取得
     cli = jquantsapi.Client(mail_address=MY_MAIL, password=MY_PASSWORD)
     cli.MAX_WORKERS = MAX_WORKERS
-    for func in [trade_info_loader, prices_daily_quotes_loader, fin_announcement_loader, 
-                 index_price_loader, fin_statement_loader]:
+    for func in [trades_spec_loader, prices_daily_quotes_loader, fin_announcement_loader, 
+                 indices_topix_loader, fin_statement_loader]:
         with timer(func.__name__): func(cli)
     del cli
     

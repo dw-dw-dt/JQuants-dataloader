@@ -43,7 +43,7 @@ def save_df(df: pd.DataFrame, file_name: str):
     df.to_pickle(f'{FILE_PATH}/{file_name}.pkl')
 
 
-def index_price_loader(cli: jquantsapi.Client):
+def indices_topix_loader(cli: jquantsapi.Client):
     """
     2021年1月から足元までの指数データを取得することができます。
     取得可能な指数データはTOPIX（東証株価指数）のみとなります。
@@ -51,7 +51,7 @@ def index_price_loader(cli: jquantsapi.Client):
     save_df(cli.get_indices_topix(), 'topix')
 
 
-def trade_info_loader(cli: jquantsapi.Client):
+def trades_spec_loader(cli: jquantsapi.Client):
     """
     2017年1月から足元までの投資部門別売買状況（金額）のデータを取得することができます。
     配信データは下記のページで公表している内容と同一です。データの単位は千円です。
