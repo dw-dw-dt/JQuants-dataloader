@@ -1,5 +1,6 @@
 # JQuants APIを用いでデータ取得します
 * poetryの仮想環境に入った後は `controller.py` を実行することを想定しています.   
+* 実行することで,  `src/utils.py` のFILE_PATHのディレクトリに, 取得データをcsvとpickleで保存します.
 * また,取得データをDeta（ https://deta.space ）というクラウドサービスに保存（バックアップ）する処理が `controller.py` の最終フェーズに存在するが, 利用しない場合はコメントアウトすればOK.
 
 ## requirement

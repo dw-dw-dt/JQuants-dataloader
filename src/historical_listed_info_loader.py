@@ -27,7 +27,7 @@ def main(max_workers):
         for future in as_completed(futures):
             buff.append(future.result())
     
-    df = pd.concat(buff).sort_values(["Date", "Code"]).reset_index(drop=True)
+    df = pd.concat(buff).sort_values(["Date", "Code"])
     save_df(df, 'listed_info')
 
 
