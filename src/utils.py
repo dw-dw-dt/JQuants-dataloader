@@ -1,6 +1,7 @@
 import json
 import time
 import pandas as pd
+import numpy as np
 import pathlib
 import jquantsapi
 from deta import Deta
@@ -38,9 +39,9 @@ def save_df(df: pd.DataFrame, file_name: str):
         df.tail(limit_row).to_csv(f'{FILE_PATH}/{file_name}_tail.csv', index=False, encoding='utf-8-sig')
     else:
         df.to_csv(f'{FILE_PATH}/{file_name}.csv', index=False, encoding='utf-8-sig')
-    
-    # pickleで保存
-    df.to_pickle(f'{FILE_PATH}/{file_name}.pkl')
+
+    # featherで保存
+    df.to_feather(f'{FILE_PATH}/{file_name}.feather')
 
 
 def indices_topix_loader(cli: jquantsapi.Client):
@@ -81,8 +82,19 @@ def fin_statement_loader(cli: jquantsapi.Client):
     2017年1月以降のデータをもとに作成されております。
     """
     df = cli.get_statements_range(cache_dir=f'{FILE_PATH}/cache')
+
+    # 他のdfとmergeするときのために型変換
     df['DisclosedDate'] = pd.to_datetime(df['DisclosedDate'], format='%Y-%m-%d')
     df['LocalCode'] = df['LocalCode'].astype(str).str.zfill(5)
+
+    # feather対応の型変換（'－'で型変換エラーとなる）
+    modify_cols = []
+    for col in df.columns:
+        if '－' in set(df[col]):
+            modify_cols.append(col)
+    for col in modify_cols:
+        df[col] = df[col].replace('－', np.nan).astype(float)
+    
     save_df(df, 'fin_statement')
 
 
@@ -95,9 +107,9 @@ def deta_upload():
     
     # Upload files. If exists, it will be overwritten.
     drive = deta.Drive('JQuants_files')
-    drive.put(name='trade_spec.pkl', path = f'{FILE_PATH}/trades_spec.pkl')
-    drive.put(name='prices_daily_quotes.pkl', path = f'{FILE_PATH}/prices_daily_quotes.pkl')
-    drive.put(name='fin_announcement.pkl', path = f'{FILE_PATH}/fin_announcement.pkl')
-    drive.put(name='fin_statement.pkl', path = f'{FILE_PATH}/fin_statement.pkl')
-    drive.put(name='topix.pkl', path = f'{FILE_PATH}/topix.pkl')
-    drive.put(name='listed_info.pkl', path = f'{FILE_PATH}/listed_info.pkl')
+    drive.put(name='trade_spec.feather', path = f'{FILE_PATH}/trades_spec.feather')
+    drive.put(name='prices_daily_quotes.feather', path = f'{FILE_PATH}/prices_daily_quotes.feather')
+    drive.put(name='fin_announcement.feather', path = f'{FILE_PATH}/fin_announcement.feather')
+    drive.put(name='fin_statement.feather', path = f'{FILE_PATH}/fin_statement.feather')
+    drive.put(name='topix.feather', path = f'{FILE_PATH}/topix.feather')
+    drive.put(name='listed_info.feather', path = f'{FILE_PATH}/listed_info.feather')
