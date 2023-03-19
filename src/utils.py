@@ -80,7 +80,10 @@ def fin_statement_loader(cli: jquantsapi.Client):
     """
     2017年1月以降のデータをもとに作成されております。
     """
-    save_df(cli.get_statements_range(cache_dir=f'{FILE_PATH}/cache'), 'fin_statement')
+    df = cli.get_statements_range(cache_dir=f'{FILE_PATH}/cache')
+    df['DisclosedDate'] = pd.to_datetime(df['DisclosedDate'], format='%Y-%m-%d')
+    df['LocalCode'] = df['LocalCode'].astype(str).str.zfill(5)
+    save_df(df, 'fin_statement')
 
 
 def deta_upload():
