@@ -11,7 +11,7 @@ from contextlib import contextmanager
 MY_MAIL = json.load(open('token.json', 'r'))['mail']
 MY_PASSWORD = json.load(open('token.json', 'r'))['password']
 DETA_KEY = json.load(open('token.json', 'r'))['deta']
-FILE_PATH = '/mnt/d/JQuants-loader-files'
+FILE_PATH = json.load(open('token.json', 'r'))['filepath']
 
 
 @contextmanager
