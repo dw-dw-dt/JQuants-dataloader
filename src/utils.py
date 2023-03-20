@@ -24,7 +24,7 @@ def timer(name):
 
 def create_dir():
     if not pathlib.Path(f'{FILE_PATH}').exists():
-        raise ValueError('Please set correct FILE_PATH in src/utils.py')
+        raise ValueError('Please set correct FILE_PATH in token.json')
     pathlib.Path(f'{FILE_PATH}/cache').mkdir(parents=True, exist_ok=True)
 
 
