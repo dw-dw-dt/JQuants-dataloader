@@ -23,8 +23,9 @@ def timer(name):
 
 
 def create_dir():
-    p = pathlib.Path(f'{FILE_PATH}/cache')
-    p.mkdir(parents=True, exist_ok=True)
+    if not pathlib.Path(f'{FILE_PATH}').exists():
+        raise ValueError('Please set correct FILE_PATH in src/utils.py')
+    pathlib.Path(f'{FILE_PATH}/cache').mkdir(parents=True, exist_ok=True)
 
 
 def save_df(df: pd.DataFrame, file_name: str):
@@ -47,14 +48,14 @@ def save_df(df: pd.DataFrame, file_name: str):
 def indices_topix_loader(cli: jquantsapi.Client):
     """
     2021年1月から足元までの指数データを取得することができます。
-    取得可能な指数データはTOPIX（東証株価指数）のみとなります。
+    取得可能な指数データはTOPIX(東証株価指数)のみとなります。
     """
     save_df(cli.get_indices_topix(), 'topix')
 
 
 def trades_spec_loader(cli: jquantsapi.Client):
     """
-    2017年1月から足元までの投資部門別売買状況（金額）のデータを取得することができます。
+    2017年1月から足元までの投資部門別売買状況(金額)のデータを取得することができます。
     配信データは下記のページで公表している内容と同一です。データの単位は千円です。
     https://www.jpx.co.jp/markets/statistics-equities/investor-type/index.html
     """

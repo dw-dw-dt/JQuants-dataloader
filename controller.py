@@ -11,12 +11,12 @@ if __name__ == "__main__":
     https://jpx.gitbook.io/j-quants-api/api-reference/data-spec API仕様書
     https://github.com/J-Quants/jquants-api-client-python APIクライアント仕様書
     当日の24:30ごろ更新されるデータもあるので、毎日深夜に実行して前日分のデータを取得するのがよさそう
-    * 投資部門別売買状況（trade_info）:毎週第4営業日, 18:00
-    * 株価情報（prices_daily_quotes）:日次更新, 18:30
-    * 決算発表予定（fin_announcement）:更新があった場合のみ, 19:00
-    * 指数情報（index_price）:日次更新, 21:00
-    * 銘柄情報（listed_info）:日次更新, 24:00
-    * 財務情報（fin_statement）:当日分の速報を18:30, 確定分を24:30
+    * 投資部門別売買状況(trade_info):毎週第4営業日, 18:00
+    * 株価情報(prices_daily_quotes):日次更新, 18:30
+    * 決算発表予定(fin_announcement):更新があった場合のみ, 19:00
+    * 指数情報(index_price):日次更新, 21:00
+    * 銘柄情報(listed_info):日次更新, 24:00
+    * 財務情報(fin_statement):当日分の速報を18:30, 確定分を24:30
     """
     MAX_WORKERS = int(os.cpu_count()*0.8)
     target_date = dt.datetime.now() - dt.timedelta(days=1)
