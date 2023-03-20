@@ -7,5 +7,5 @@
 * `token.json` をREADMEと同じディレクトリに配置する必要がある. jsonファイルのキーは mail, password, deta, filepath の4つを想定している.  
 mail : JQuants API登録時のメールアドレス.  
 password : JQuants API登録時のパスワード.  
-deta : detaのアクセスキー. detaを利用しない場合は空文字 "" で問題なし.
+deta : detaのアクセスキー. detaを利用しない場合は空文字 "" で問題なし.  
 filepath : ファイル保存用ディレクトリを記載
