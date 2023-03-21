@@ -21,10 +21,8 @@ if __name__ == "__main__":
     MAX_WORKERS = int(os.cpu_count()*0.8)
     target_date = dt.datetime.now() - dt.timedelta(days=1)
 
-    # 営業日でかつ12/31でないなら処理 （⇔ 土日、祝日、12/31,1/1～1/3はスキップ）
-    if jpbizday.is_bizday(target_date) and (target_date.month, target_date.day) != (12,31):
-        pass
-    else:
+    # 土日、祝日、12/31,1/1～1/3はスキップ
+    if not jpbizday.is_bizday(target_date) or (target_date.month, target_date.day) == (12,31):
         print(f'{target_date} is not bizday. bye!')
         exit()
 
