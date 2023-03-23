@@ -84,20 +84,12 @@ def fin_statement_loader(cli: jquantsapi.Client):
     """
     df = cli.get_statements_range(cache_dir=f'{FILE_PATH}/cache')
 
-    # cacheをcsv.gzで保存し,再読み込みした時に date -> str, str -> int になっている.
-    # str -> date
-    for col in ['DisclosedDate', 'CurrentPeriodEndDate', 'CurrentFiscalYearStartDate', 'CurrentFiscalYearEndDate']:
-        df[col] = pd.to_datetime(df[col], format='%Y-%m-%d')
-    # int -> str
-    df['LocalCode'] = df['LocalCode'].astype(str).str.zfill(5)
-
-    # feather対応の型変換（'－'で型変換エラーとなる）
-    modify_cols = []
+    # cacheをcsv.gzで保存し,再読み込みした時に date -> str, str -> int になっている. cliの次のリリース(いつ?)で修正される予定.
     for col in df.columns:
-        if '－' in set(df[col]):
-            modify_cols.append(col)
-    for col in modify_cols:
-        df[col] = df[col].replace('－', np.nan).astype(float) # csvの欠損値はnp.nanなのでそれに合わせて
+        if col in ['DisclosedDate', 'CurrentPeriodEndDate', 'CurrentFiscalYearStartDate', 'CurrentFiscalYearEndDate']:
+            df[col] = pd.to_datetime(df[col], format='%Y-%m-%d')
+        else:
+            df[col] = df[col].astype(str)
     
     save_df(df, 'fin_statement')
 
