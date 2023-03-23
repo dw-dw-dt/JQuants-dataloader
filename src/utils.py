@@ -2,6 +2,7 @@ import json
 import time
 import pandas as pd
 import numpy as np
+import datetime as dt
 import pathlib
 import jquantsapi
 from deta import Deta
@@ -99,6 +100,58 @@ def fin_statement_loader(cli: jquantsapi.Client):
             modify_cols.append(col)
     for col in modify_cols:
         df[col] = df[col].replace({'－': np.nan, 'nan': np.nan})
+
+    # 型変換
+    columns_type = {
+        "DisclosureNumber": int,
+        "DisclosedDate": dt.datetime,
+        "ApplyingOfSpecificAccountingOfTheQuarterlyFinancialStatements": bool,
+        "AverageNumberOfShares": float,
+        "BookValuePerShare": float,
+        "ChangesBasedOnRevisionsOfAccountingStandard": bool,
+        "ChangesInAccountingEstimates": bool,
+        "ChangesOtherThanOnesBasedOnRevisionsOfAccountingStandard": bool,
+        "CurrentFiscalYearEndDate": dt.datetime,
+        "CurrentFiscalYearStartDate": dt.datetime,
+        "CurrentPeriodEndDate": dt.datetime,
+        "DisclosedTime": str,
+        "DisclosedUnixTime": str,
+        "EarningsPerShare": float,
+        "Equity": float,
+        "EquityToAssetRatio": float,
+        "ForecastDividendPerShare1stQuarter": float,
+        "ForecastDividendPerShare2ndQuarter": float,
+        "ForecastDividendPerShare3rdQuarter": float,
+        "ForecastDividendPerShareAnnual": float,
+        "ForecastDividendPerShareFiscalYearEnd": float,
+        "ForecastEarningsPerShare": float,
+        "ForecastNetSales": float,
+        "ForecastOperatingProfit": float,
+        "ForecastOrdinaryProfit": float,
+        "ForecastProfit": float,
+        "LocalCode": str,
+        "MaterialChangesInSubsidiaries": bool,
+        "NetSales": float,
+        "NumberOfIssuedAndOutstandingSharesAtTheEndOfFiscalYearIncludingTreasuryStock": float,
+        "NumberOfTreasuryStockAtTheEndOfFiscalYear": float,
+        "OperatingProfit": float,
+        "OrdinaryProfit": float,
+        "Profit": float,
+        "ResultDividendPerShare1stQuarter": float,
+        "ResultDividendPerShare2ndQuarter": float,
+        "ResultDividendPerShare3rdQuarter": float,
+        "ResultDividendPerShareAnnual": float,
+        "ResultDividendPerShareFiscalYearEnd": float,
+        "RetrospectiveRestatement": bool,
+        "TotalAssets": float,
+        "TypeOfCurrentPeriod": str,
+        "TypeOfDocument": str,
+    }
+    for col in df.columns:
+        if columns_type[col] == dt.datetime or columns_type[col] == bool:  # boolはnp.nanがTrueになる
+            pass
+        else:
+            df[col] = df[col].astype(columns_type[col])
     
     save_df(df, 'fin_statement')
 
