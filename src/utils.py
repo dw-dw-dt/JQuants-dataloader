@@ -92,7 +92,7 @@ def fin_statement_loader(cli: jquantsapi.Client):
         else:
             df[col] = df[col].astype(str)
     
-    # 型変換
+    # データ変換
     modify_cols = []
     for col in df.columns:
         if '－' in set(df[col]) or 'nan' in set(df[col]):
