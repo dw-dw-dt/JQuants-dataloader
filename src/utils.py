@@ -85,11 +85,20 @@ def fin_statement_loader(cli: jquantsapi.Client):
     df = cli.get_statements_range(cache_dir=f'{FILE_PATH}/cache')
 
     # cacheをcsv.gzで保存し,再読み込みした時に date -> str, str -> int になっている. cliの次のリリース(いつ?)で修正される予定.
+    date_columns = ['DisclosedDate', 'CurrentPeriodEndDate', 'CurrentFiscalYearStartDate', 'CurrentFiscalYearEndDate']
     for col in df.columns:
-        if col in ['DisclosedDate', 'CurrentPeriodEndDate', 'CurrentFiscalYearStartDate', 'CurrentFiscalYearEndDate']:
+        if col in date_columns:
             df[col] = pd.to_datetime(df[col], format='%Y-%m-%d')
         else:
             df[col] = df[col].astype(str)
+    
+    # 型変換
+    modify_cols = []
+    for col in df.columns:
+        if '－' in set(df[col]) or 'nan' in set(df[col]):
+            modify_cols.append(col)
+    for col in modify_cols:
+        df[col] = df[col].replace({'－': np.nan, 'nan': np.nan})
     
     save_df(df, 'fin_statement')
 
