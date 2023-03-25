@@ -86,12 +86,8 @@ def fin_statement_loader(cli: jquantsapi.Client):
     df = cli.get_statements_range(cache_dir=f'{FILE_PATH}/cache')
 
     # cacheをcsv.gzで保存し,再読み込みした時に date -> str, str -> int になっている. cliの次のリリース(いつ?)で修正される予定.
-    date_columns = ['DisclosedDate', 'CurrentPeriodEndDate', 'CurrentFiscalYearStartDate', 'CurrentFiscalYearEndDate']
     for col in df.columns:
-        if col in date_columns:
-            df[col] = pd.to_datetime(df[col], format='%Y-%m-%d')
-        else:
-            df[col] = df[col].astype(str)
+        df[col] = df[col].astype(str)
     
     # データ変換
     modify_cols = []
@@ -148,9 +144,11 @@ def fin_statement_loader(cli: jquantsapi.Client):
         "TypeOfDocument": str,
     }
     for col in df.columns:
-        if columns_type[col] == dt.datetime or columns_type[col] == bool:  # boolはnp.nanがTrueになる
-            pass
-        else:
+        if columns_type[col] == dt.datetime:
+            df[col] = pd.to_datetime(df[col].map(str), format='%Y-%m-%d')
+        elif columns_type[col] == bool:  # boolはnp.nanがTrueになる
+            df[col] = df[col].astype(str)
+        elif columns_type[col] == int or columns_type[col] == float:
             df[col] = df[col].astype(columns_type[col])
     
     save_df(df, 'fin_statement')
