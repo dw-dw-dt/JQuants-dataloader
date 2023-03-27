@@ -92,10 +92,10 @@ def fin_statement_loader(cli: jquantsapi.Client):
     # データ変換
     modify_cols = []
     for col in df.columns:
-        if '－' in set(df[col]) or 'nan' in set(df[col]):
+        if '－' in set(df[col]) or 'nan' in set(df[col]) or '' in set(df[col]):
             modify_cols.append(col)
     for col in modify_cols:
-        df[col] = df[col].replace({'－': np.nan, 'nan': np.nan})
+        df[col] = df[col].replace({'－': np.nan, 'nan': np.nan, '': np.nan})
 
     # 型変換
     columns_type = {
