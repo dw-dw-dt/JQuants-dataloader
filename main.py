@@ -19,7 +19,13 @@ if __name__ == "__main__":
     * 財務情報(fin_statement):当日分の速報を18:30, 確定分を24:30
     """
     MAX_WORKERS = int(os.cpu_count()*0.8)
-    target_date = dt.datetime.now() - dt.timedelta(days=1)
+    now = dt.datetime.now()
+    target_date = now - dt.timedelta(days=1)
+
+    # ベータ版API終了
+    if now >= dt.datetime(2023,4,10):
+        print('Beta API is end. bye!')
+        exit()
 
     # 土日、祝日、12/31,1/1～1/3はスキップ
     if not jpbizday.is_bizday(target_date) or (target_date.month, target_date.day) == (12,31):
